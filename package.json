@@ -1,0 +1,29 @@
+{
+  "name": "proto2immutablets",
+  "version": "1.2.0",
+  "description": "",
+  "main": "src/generator.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "typescript",
+    "immutablejs",
+    "protobuf",
+    "proto",
+    "grpc"
+  ],
+  "bin": {
+    "p2it": "src/cli.js"
+  },
+  "engines": {
+    "node": ">=0.10"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "commander": "^2.9.0",
+    "pbjs": "0.0.3",
+    "protobuf.js": "^1.1.2"
+  }
+}
