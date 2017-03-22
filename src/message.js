@@ -25,8 +25,6 @@ export class ${message.name} {
     var fieldName = utils.snakeCaseToCamelCase(field.name);
     var messageName = utils.snakeCaseToCamelCase(message.name);
 
-
-    console.log(type);
     switch (type) {
       case 'string':
       case 'number':
