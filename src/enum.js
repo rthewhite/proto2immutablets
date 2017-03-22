@@ -7,9 +7,11 @@ module.exports = function handleEnum(enm, message) {
     tsEnum += `export enum ${message.name}${enm.name} {\n`;
   }
 
-  for (var i = 0, len = enm.values.length; i < len; i++) {
-    var value = enm.values[i];
-    tsEnum += `  ${value.name} = ${value.id}`;
+  const keys = Object.keys(enm.values);
+
+  for (var i = 0, len = keys.length; i < len; i++) {
+    var value = enm.values[keys[i]];
+    tsEnum += `  ${keys[i]} = ${value.value}`;
 
     if (i + 1 !== enm.values.length) {
       tsEnum += ',\n';

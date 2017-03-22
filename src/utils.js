@@ -5,8 +5,16 @@ function capitalize(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
+function snakeCaseToCamelCase(str) {
+  return str.replace(/(\_\w)/g, function(m){return m[1].toUpperCase();});
+}
+
 function determineType(field, message, messageEnums, globalEnums) {
-  if (messageEnums.indexOf(`${message.name}${capitalize(field.name)}`) > -1) {
+
+  var messageName = capitalize(snakeCaseToCamelCase(message.name));
+  var fieldName = capitalize(snakeCaseToCamelCase(field.name));
+  
+  if (messageEnums.indexOf(`${messageName}${fieldName}`) > -1) {
     return 'message-enum';
   }
 
@@ -32,5 +40,6 @@ function isCustomType(field) {
 module.exports = {
   capitalize: capitalize,
   determineType: determineType,
-  isCustomType: isCustomType
+  isCustomType: isCustomType,
+  snakeCaseToCamelCase: snakeCaseToCamelCase
 }

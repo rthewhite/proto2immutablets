@@ -22,18 +22,22 @@ export class ${message.name} {
 
   message.fields.forEach(field => {
     var type = utils.determineType(field, message, messageEnums, globalEnums);
+    var fieldName = utils.snakeCaseToCamelCase(field.name);
+    var messageName = utils.snakeCaseToCamelCase(message.name);
 
+
+    console.log(type);
     switch (type) {
       case 'string':
       case 'number':
       case 'boolean':
-        methods += `  get ${field.name}(): ${type} {\n`;
-        methods += `    return this._data.get('${field.name}');\n`;
+        methods += `  get ${fieldName}(): ${type} {\n`;
+        methods += `    return this._data.get('${fieldName}');\n`;
         methods += `  }\n\n`
 
-        methods += `  set${utils.capitalize(field.name)}(${field.name}: ${type}): ${message.name} {\n`;
-        methods += `    const data = this._data.set('${field.name}', ${field.name});\n`;
-        methods += `    return new ${message.name}(data.toJS());\n`;
+        methods += `  set${utils.capitalize(fieldName)}(${fieldName}: ${type}): ${messageName} {\n`;
+        methods += `    const data = this._data.set('${fieldName}', ${fieldName});\n`;
+        methods += `    return new ${messageName}(data.toJS());\n`;
         methods += `  }\n\n`;
         break;
 
@@ -49,40 +53,40 @@ export class ${message.name} {
           constructor += `    }\n\n`
         }
 
-        methods += `  get ${field.name}(): ${type}<${field.type}> {\n`;
-        methods += `    return this._data.get('${field.name}');\n`;
+        methods += `  get ${fieldName}(): ${type}<${field.type}> {\n`;
+        methods += `    return this._data.get('${fieldName}');\n`;
         methods += `  }\n\n`;
 
-        methods += `  set${utils.capitalize(field.name)}(${field.name}: ${type}<${field.type}>): ${message.name} {\n`;
-        methods += `    const data = this._data.set('${field.name}', ${field.name});\n`
-        methods += `    return new ${message.name}(data.toJS());\n`;
+        methods += `  set${utils.capitalize(fieldName)}(${fieldName}: ${type}<${field.type}>): ${messageName} {\n`;
+        methods += `    const data = this._data.set('${fieldName}', ${fieldName});\n`
+        methods += `    return new ${messageName}(data.toJS());\n`;
         methods += `  }\n\n`;
         break;
 
       case 'Map':
-        methods += `  get ${field.name}(): ${type}<${field.keytype}, ${field.type}> {\n`;
-        methods += `    return this._data.get('${field.name}');\n`;
+        methods += `  get ${fieldName}(): ${type}<${field.keytype}, ${field.type}> {\n`;
+        methods += `    return this._data.get('${fieldName}');\n`;
         methods += `  }\n\n`;
 
-        methods += `  set${utils.capitalize(field.name)}(${field.name}: ${type}<${field.keytype}, ${field.type}>): ${message.name} {\n`;
-        methods += `    const data = this._data.set('${field.name}', ${field.name});\n`
-        methods += `    return new ${message.name}(data.toJS());\n`;
+        methods += `  set${utils.capitalize(fieldName)}(${fieldName}: ${type}<${field.keytype}, ${field.type}>): ${messageName} {\n`;
+        methods += `    const data = this._data.set('${fieldName}', ${fieldName});\n`
+        methods += `    return new ${messageName}(data.toJS());\n`;
         methods += `  }\n\n`;
         break;
 
       case 'custom':
         // Makes sure the custom type get's constructed
-        constructor += `    if (this._data.get('${field.name}')) {\n`;
-        constructor += `      this._data = this._data.set('${field.name}', new ${field.type}(this._data.get('${field.name}').toJS()));\n`
+        constructor += `    if (this._data.get('${fieldName}')) {\n`;
+        constructor += `      this._data = this._data.set('${fieldName}', new ${field.type}(this._data.get('${fieldName}').toJS()));\n`
         constructor += `    }\n\n`;
 
-        methods += `  get ${field.name} (): ${field.type} {\n`;
-        methods += `    return this._data.get('${field.name}');\n`;
+        methods += `  get ${fieldName} (): ${field.type} {\n`;
+        methods += `    return this._data.get('${fieldName}');\n`;
         methods += `  }\n\n`;
 
-        methods += `  set${utils.capitalize(field.name)}(${field.name}: ${field.type}): ${message.name} {\n`;
-        methods += `    const data = this._data.set('${field.name}', ${field.name});\n`;
-        methods += `    return new ${message.name}(data.toJS());\n`;
+        methods += `  set${utils.capitalize(fieldName)}(${fieldName}: ${field.type}): ${messageName} {\n`;
+        methods += `    const data = this._data.set('${fieldName}', ${fieldName});\n`;
+        methods += `    return new ${messageName}(data.toJS());\n`;
         methods += `  }\n\n`;
         break;
 
@@ -91,23 +95,23 @@ export class ${message.name} {
         var enumType;
 
         if (type === 'message-enum') {
-          enumType = `${message.name}${utils.capitalize(field.name)}`;
+          enumType = `${messageName}${utils.capitalize(fieldName)}`;
         } else {
           enumType = `${field.type}`;
         }
 
         // Make sure the enum get's constructed
-        constructor += `    if (this._data.get('${field.name}') !== undefined) {\n`;
-        constructor += `      this._data = this._data.set('${field.name}', ${enumType}[this._data.get('${field.name}')]);`;
+        constructor += `    if (this._data.get('${fieldName}') !== undefined) {\n`;
+        constructor += `      this._data = this._data.set('${fieldName}', ${enumType}[this._data.get('${fieldName}')]);`;
         constructor += `    }\n\n`;
 
-        methods += `  get ${field.name} (): ${enumType} {\n`;
-        methods += `    return this._data.get('${field.name}');\n`;
+        methods += `  get ${fieldName} (): ${enumType} {\n`;
+        methods += `    return this._data.get('${fieldName}');\n`;
         methods += `  }\n\n`;
 
-        methods += `  set${utils.capitalize(field.name)}(${field.name}: ${enumType}): ${message.name} {\n`;
-        methods += `    const data = this._data.set('${field.name}', ${field.name});\n`;
-        methods += `    return new ${message.name}(data.toJS());\n`;
+        methods += `  set${utils.capitalize(fieldName)}(${fieldName}: ${enumType}): ${messageName} {\n`;
+        methods += `    const data = this._data.set('${fieldName}', ${fieldName});\n`;
+        methods += `    return new ${messageName}(data.toJS());\n`;
         methods += `  }\n\n`;
         break;
 
