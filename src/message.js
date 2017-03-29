@@ -98,11 +98,6 @@ export class ${message.name} {
           enumType = `${field.type}`;
         }
 
-        // Make sure the enum get's constructed
-        constructor += `    if (this._data.get('${fieldName}') !== undefined) {\n`;
-        constructor += `      this._data = this._data.set('${fieldName}', ${enumType}[this._data.get('${fieldName}')]);`;
-        constructor += `    }\n\n`;
-
         methods += `  get ${fieldName} (): ${enumType} {\n`;
         methods += `    return this._data.get('${fieldName}');\n`;
         methods += `  }\n\n`;
@@ -112,7 +107,6 @@ export class ${message.name} {
         methods += `    return new ${messageName}(data.toJS());\n`;
         methods += `  }\n\n`;
         break;
-
     }
   });
 
