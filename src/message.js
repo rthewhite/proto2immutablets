@@ -34,8 +34,7 @@ export class ${message.name} {
         methods += `  }\n\n`
 
         methods += `  set${utils.capitalize(fieldName)}(${fieldName}: ${type}): ${messageName} {\n`;
-        methods += `    const data = this._data.set('${fieldName}', ${fieldName});\n`;
-        methods += `    return new ${messageName}(data.toJS());\n`;
+        methods += `    return new ${messageName}(this._data.set('${fieldName}', ${fieldName}).toJS());\n`;
         methods += `  }\n\n`;
         break;
 
@@ -56,8 +55,7 @@ export class ${message.name} {
         methods += `  }\n\n`;
 
         methods += `  set${utils.capitalize(fieldName)}(${fieldName}: ${type}<${field.type}>): ${messageName} {\n`;
-        methods += `    const data = this._data.set('${fieldName}', ${fieldName});\n`
-        methods += `    return new ${messageName}(data.toJS());\n`;
+        methods += `    return new ${messageName}(this._data.set('${fieldName}', ${fieldName}).toJS());\n`;
         methods += `  }\n\n`;
         break;
 
@@ -67,8 +65,7 @@ export class ${message.name} {
         methods += `  }\n\n`;
 
         methods += `  set${utils.capitalize(fieldName)}(${fieldName}: ${type}<${field.keytype}, ${field.type}>): ${messageName} {\n`;
-        methods += `    const data = this._data.set('${fieldName}', ${fieldName});\n`
-        methods += `    return new ${messageName}(data.toJS());\n`;
+        methods += `    return new ${messageName}(this._data.set('${fieldName}', ${fieldName}).toJS());\n`;
         methods += `  }\n\n`;
         break;
 
@@ -83,8 +80,7 @@ export class ${message.name} {
         methods += `  }\n\n`;
 
         methods += `  set${utils.capitalize(fieldName)}(${fieldName}: ${field.type}): ${messageName} {\n`;
-        methods += `    const data = this._data.set('${fieldName}', ${fieldName});\n`;
-        methods += `    return new ${messageName}(data.toJS());\n`;
+        methods += `    return new ${messageName}(this._data.set('${fieldName}', ${fieldName}).toJS());\n`;
         methods += `  }\n\n`;
         break;
 
@@ -103,8 +99,7 @@ export class ${message.name} {
         methods += `  }\n\n`;
 
         methods += `  set${utils.capitalize(fieldName)}(${fieldName}: ${enumType}): ${messageName} {\n`;
-        methods += `    const data = this._data.set('${fieldName}', ${fieldName});\n`;
-        methods += `    return new ${messageName}(data.toJS());\n`;
+        methods += `    return new ${messageName}(this._data.set('${fieldName}', ${fieldName}).toJS());\n`;
         methods += `  }\n\n`;
         break;
     }
