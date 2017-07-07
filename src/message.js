@@ -22,8 +22,6 @@ module.exports = function handleMessage(message, messages, globalEnums, imports)
     var fieldName = utils.snakeCaseToCamelCase(field.name);
     var messageName = utils.snakeCaseToCamelCase(message.name);
 
-    console.log(fieldName, type);
-
     switch (type) {
       case 'string':
       case 'number':
