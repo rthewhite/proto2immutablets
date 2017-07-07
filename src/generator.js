@@ -28,9 +28,9 @@ function generator(protoLocation, outputLocation, resolveImport) {
 
     var tsOutput = `// !!!!!!!!!!!!!! WARNING WARNING WARNING!!!!!!!!!!!!!
 //    THIS IS GENERATED CODE, DO NOT EDIT DIRECTLY!
-// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! \n`;
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n`;
 
-  tsOutput += `import { Map, List, fromJS } from 'immutable'; \n\n`;
+  tsOutput += `import { Map, List, fromJS } from 'immutable';\n\n`;
 
   var enums = '';
 

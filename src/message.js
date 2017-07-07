@@ -27,7 +27,7 @@ module.exports = function handleMessage(message, messages, globalEnums, imports)
       case 'number':
       case 'boolean':
         methods += `  get ${fieldName}(): ${type} {\n`
-        methods += `    return this._data.get('${fieldName}')\n`;
+        methods += `    return this._data.get('${fieldName}');\n`;
         methods += `  }\n\n`;
 
         methods += `  set${utils.capitalize(fieldName)}(${fieldName}: ${type}): ${messageName} {\n`;
