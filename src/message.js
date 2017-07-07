@@ -22,6 +22,11 @@ module.exports = function handleMessage(message, messages, globalEnums, imports)
     var fieldName = utils.snakeCaseToCamelCase(field.name);
     var messageName = utils.snakeCaseToCamelCase(message.name);
 
+    // Split of potential packagename
+    if (field.type.indexOf('.') > -1) {
+      field.type = field.type.split('.')[1];
+    }
+
     switch (type) {
       case 'string':
       case 'number':
@@ -71,11 +76,6 @@ module.exports = function handleMessage(message, messages, globalEnums, imports)
 
         // Resolve the imported type
         if (type === 'import') {
-          // Split of potential packagename
-          if (field.type.indexOf('.') > -1) {
-            field.type = field.type.split('.')[1];
-          }
-
           for (let i = 0; i < imports.length; i++) {
             const imported = imports[i];
 
