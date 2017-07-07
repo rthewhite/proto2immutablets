@@ -51,8 +51,6 @@ function generator(protoLocation, outputLocation, resolveImport) {
     }
   });
 
-  tsOutput += enums;
-
   const tsImports = [];
   const tsClasses = [];
 
@@ -81,20 +79,12 @@ function generator(protoLocation, outputLocation, resolveImport) {
   });
 
   Object.keys(importObjects).forEach((importPath) => {
-    tsOutput += `import { ${importObjects[importPath].join(', ')} } from '${importPath}'`;
+    tsOutput += `import { ${importObjects[importPath].join(', ')} } from '${importPath}';\n`;
   });
 
-  // var TC = '';
+  // Add enums
+  tsOutput += enums;
 
-  // const importPaths = Object.keys(importedTypes);
-  // importPaths.forEach((importPath) => {
-  //   const types = importedTypes[importPath];
-  //   TC += `import { ${types.join(', ')} } from '${importPath}'`
-  // });
-
-  // if (importPaths.length > 0) {
-  //   TC += '\n';
-  // }
 
   // Add classes to the file
   tsClasses.forEach((tsClass) => {
