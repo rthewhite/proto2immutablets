@@ -22,13 +22,15 @@ module.exports = function handleMessage(message, messages, globalEnums, imports)
     var fieldName = utils.snakeCaseToCamelCase(field.name);
     var messageName = utils.snakeCaseToCamelCase(message.name);
 
+    console.log(fieldName, type);
+
     switch (type) {
       case 'string':
       case 'number':
       case 'boolean':
-        methods += `  get ${fieldName}(): ${type} {;
-                        return this._data.get('${fieldName}');;
-                      }\n\n`
+        methods += `  get ${fieldName}(): ${type} {\n`
+        methods += `    return this._data.get('${fieldName}')\n`;
+        methods += `  }\n\n`;
 
         methods += `  set${utils.capitalize(fieldName)}(${fieldName}: ${type}): ${messageName} {\n`;
         methods += `    return new ${messageName}(this._data.set('${fieldName}', ${fieldName}).toJS());\n`;
@@ -67,7 +69,7 @@ module.exports = function handleMessage(message, messages, globalEnums, imports)
         break;
 
       case 'import':
-      case 'custom':
+      case 'message':
         // Makes sure the custom type get's constructed
         constructor += `    if (this._data.get('${fieldName}')) {\n`;
         constructor += `      this._data = this._data.set('${fieldName}', new ${field.type}(this._data.get('${fieldName}').toJS()));\n`

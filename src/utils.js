@@ -31,7 +31,7 @@ function determineType(field, message, messages, messageEnums, globalEnums, impo
   }
 
   const messageIndex = messages.findIndex((message) => {
-    return message.name === fieldName;
+    return message.name === field.type;
   });
 
   if (messageIndex > -1) {
