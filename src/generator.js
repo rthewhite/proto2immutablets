@@ -16,7 +16,6 @@ function generator(protoLocation, outputLocation, resolveImport) {
   // Resolve the imports
   protoJSON.imports.forEach((importPath) => {
     const resolve = resolveImport(importPath);
-    const importJSON = 
 
     imports.push({
       import: resolve.importPath,
@@ -54,10 +53,54 @@ function generator(protoLocation, outputLocation, resolveImport) {
 
   tsOutput += enums;
 
+  const tsImports = [];
+  const tsClasses = [];
+
   // Create classes for the individual messages
   protoJSON.messages.forEach(message => {
-    tsOutput += handleMessage(message, protoJSON.messages, globalEnums, imports);
+    const result = handleMessage(message, protoJSON.messages, globalEnums, imports); 
+    tsImports.push(result.imports);
+    tsClasses.push(result.class);
   });
+
+  // Handle the imports
+  const importObjects = {};
+
+  tsImports.forEach((tsImport) => {
+    Object.keys(tsImport).forEach((importKey) => {
+      if (!importObjects[importKey]) {
+        importObjects[importKey] = [...tsImport[importKey]];
+      } else {
+        tsImport[importKey].forEach((message) => {
+          if (importObjects[importKey].indexOf(message) === -1) {
+            importObjects[importKey].push(message);
+          }
+        });
+      }
+    }); 
+  });
+
+  Object.keys(importObjects).forEach((importPath) => {
+    tsOutput += `import { ${importObjects[importPath].join(', ')} } from '${importPath}'`;
+  });
+
+  // var TC = '';
+
+  // const importPaths = Object.keys(importedTypes);
+  // importPaths.forEach((importPath) => {
+  //   const types = importedTypes[importPath];
+  //   TC += `import { ${types.join(', ')} } from '${importPath}'`
+  // });
+
+  // if (importPaths.length > 0) {
+  //   TC += '\n';
+  // }
+
+  // Add classes to the file
+  tsClasses.forEach((tsClass) => {
+    tsOutput += tsClass;
+  });
+
 
   // Write the TypeScript file and remove temp json file
   if (outputLocation) {

@@ -68,13 +68,14 @@ module.exports = function handleMessage(message, messages, globalEnums, imports)
 
       case 'import':
       case 'message':
-        // Makes sure the custom type get's constructed
-        constructor += `    if (this._data.get('${fieldName}')) {\n`;
-        constructor += `      this._data = this._data.set('${fieldName}', new ${field.type}(this._data.get('${fieldName}').toJS()));\n`
-        constructor += `    }\n\n`;
 
         // Resolve the imported type
         if (type === 'import') {
+          // Split of potential packagename
+          if (field.type.indexOf('.') > -1) {
+            field.type = field.type.split('.')[1];
+          }
+
           for (let i = 0; i < imports.length; i++) {
             const imported = imports[i];
 
@@ -96,6 +97,10 @@ module.exports = function handleMessage(message, messages, globalEnums, imports)
           }
         }
         
+        // Makes sure the custom type get's constructed
+        constructor += `    if (this._data.get('${fieldName}')) {\n`;
+        constructor += `      this._data = this._data.set('${fieldName}', new ${field.type}(this._data.get('${fieldName}').toJS()));\n`
+        constructor += `    }\n\n`;
 
         methods += `  get ${fieldName} (): ${field.type} {\n`;
         methods += `    return this._data.get('${fieldName}');\n`;
@@ -132,20 +137,7 @@ module.exports = function handleMessage(message, messages, globalEnums, imports)
   methods += `    return this._data.toJS();\n`;
   methods += `  }\n`;
 
-
-  var TC = '';
-
-  const importPaths = Object.keys(importedTypes);
-  importPaths.forEach((importPath) => {
-    const types = importedTypes[importPath];
-    TC += `import { ${types.join(', ')} } from '${importPath}'`
-  });
-
-  if (importPaths.length > 0) {
-    TC += '\n';
-  }
-
-  TC += `
+  TC = `
 export class ${message.name} {
   private _data: Map<string, any>;
 `;
@@ -153,5 +145,8 @@ export class ${message.name} {
   TC += methods;
   TC += `}\n`;
 
-  return TC;
+  return {
+    imports: importedTypes,
+    class: TC
+  }
 }

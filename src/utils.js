@@ -46,11 +46,11 @@ function determineType(field, message, messages, messageEnums, globalEnums, impo
     const imported = imports[i];
 
     const messageIndex = imported.proto.messages.findIndex((message) => {
-      return message.name === field.type;
+      return message.name === field.type || `${imported.proto.package}.${message.name}` === field.type;
     });
 
     const enumIndex = imported.proto.enums.findIndex((importEnum) => {
-      return importEnum === field.type;
+      return importEnum === field.type || `${imported.proto.package}.${importEnum}` === field.type;
     });
 
     if (messageIndex > -1 || enumIndex > -1) {
