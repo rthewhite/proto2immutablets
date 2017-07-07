@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/generator.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "keywords": [
     "typescript",
@@ -22,8 +22,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/immutable": "^3.8.7",
     "commander": "^2.9.0",
     "fs-extra": "^2.0.0",
+    "immutable": "^3.8.1",
     "protocol-buffers-schema": "3.3.0"
+  },
+  "devDependencies": {
+    "mocha": "^3.4.1"
   }
 }

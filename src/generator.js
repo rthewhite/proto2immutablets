@@ -8,8 +8,22 @@ var schema  = require('protocol-buffers-schema');
 var handleEnum = require('./enum');
 var handleMessage = require('./message');
 
-function generator(protoLocation, outputLocation) {
+function generator(protoLocation, outputLocation, resolveImport) {
   var protoJSON = schema.parse(fs.readFileSync(protoLocation));
+
+  const imports = [];
+
+  // Resolve the imports
+  protoJSON.imports.forEach((importPath) => {
+    const resolve = resolveImport(importPath);
+    const importJSON = 
+
+    imports.push({
+      import: resolve.importPath,
+      proto: schema.parse(fs.readFileSync(resolve.proto))
+    });
+  });
+
 
   var globalEnums = [];
 
@@ -42,7 +56,7 @@ function generator(protoLocation, outputLocation) {
 
   // Create classes for the individual messages
   protoJSON.messages.forEach(message => {
-    tsOutput += handleMessage(message, globalEnums);
+    tsOutput += handleMessage(message, protoJSON.messages, globalEnums, imports);
   });
 
   // Write the TypeScript file and remove temp json file
@@ -51,6 +65,8 @@ function generator(protoLocation, outputLocation) {
   } else {
     fs.writeFileSync(`${protoLocation.split('.proto')[0]}.ts`, tsOutput);
   }
+
+  return tsOutput;
 }
 
 module.exports = {

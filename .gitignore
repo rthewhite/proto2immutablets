@@ -1,4 +1,7 @@
 node_modules
+.DS_Store
 *.proto
 *.ts
 *.ts
+test
+testing

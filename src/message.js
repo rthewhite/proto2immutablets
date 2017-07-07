@@ -1,10 +1,7 @@
 const utils = require('./utils');
 
-module.exports = function handleMessage(message, globalEnums) {
-  var TC = `
-export class ${message.name} {
-  private _data: Map<string, any>;
-`;
+module.exports = function handleMessage(message, messages, globalEnums, imports) {
+  const importedTypes = {};
 
   var constructor = `
   constructor(data: any = {}) {
@@ -21,7 +18,7 @@ export class ${message.name} {
   }
 
   message.fields.forEach(field => {
-    var type = utils.determineType(field, message, messageEnums, globalEnums);
+    var type = utils.determineType(field, message, messages, messageEnums, globalEnums, imports);
     var fieldName = utils.snakeCaseToCamelCase(field.name);
     var messageName = utils.snakeCaseToCamelCase(message.name);
 
@@ -29,9 +26,9 @@ export class ${message.name} {
       case 'string':
       case 'number':
       case 'boolean':
-        methods += `  get ${fieldName}(): ${type} {\n`;
-        methods += `    return this._data.get('${fieldName}');\n`;
-        methods += `  }\n\n`
+        methods += `  get ${fieldName}(): ${type} {;
+                        return this._data.get('${fieldName}');;
+                      }\n\n`
 
         methods += `  set${utils.capitalize(fieldName)}(${fieldName}: ${type}): ${messageName} {\n`;
         methods += `    return new ${messageName}(this._data.set('${fieldName}', ${fieldName}).toJS());\n`;
@@ -69,11 +66,36 @@ export class ${message.name} {
         methods += `  }\n\n`;
         break;
 
+      case 'import':
       case 'custom':
         // Makes sure the custom type get's constructed
         constructor += `    if (this._data.get('${fieldName}')) {\n`;
         constructor += `      this._data = this._data.set('${fieldName}', new ${field.type}(this._data.get('${fieldName}').toJS()));\n`
         constructor += `    }\n\n`;
+
+        // Resolve the imported type
+        if (type === 'import') {
+          for (let i = 0; i < imports.length; i++) {
+            const imported = imports[i];
+
+            const messageIndex = imported.proto.messages.findIndex((message) => {
+              return message.name === field.type;
+            });
+
+            const enumIndex = imported.proto.enums.findIndex((importEnum) => {
+              return importEnum === field.type;
+            });
+
+            if (messageIndex > -1 || enumIndex > -1) {
+              if (!importedTypes[imported.import]) {
+                importedTypes[imported.import] = [];
+              }
+
+              importedTypes[imported.import].push(field.type);
+            }
+          }
+        }
+        
 
         methods += `  get ${fieldName} (): ${field.type} {\n`;
         methods += `    return this._data.get('${fieldName}');\n`;
@@ -101,7 +123,7 @@ export class ${message.name} {
         methods += `  set${utils.capitalize(fieldName)}(${fieldName}: ${enumType}): ${messageName} {\n`;
         methods += `    return new ${messageName}(this._data.set('${fieldName}', ${fieldName}).toJS());\n`;
         methods += `  }\n\n`;
-        break;
+        break;      
     }
   });
 
@@ -110,6 +132,23 @@ export class ${message.name} {
   methods += `    return this._data.toJS();\n`;
   methods += `  }\n`;
 
+
+  var TC = '';
+
+  const importPaths = Object.keys(importedTypes);
+  importPaths.forEach((importPath) => {
+    const types = importedTypes[importPath];
+    TC += `import { ${types.join(', ')} } from '${importPath}'`
+  });
+
+  if (importPaths.length > 0) {
+    TC += '\n';
+  }
+
+  TC += `
+export class ${message.name} {
+  private _data: Map<string, any>;
+`;
   TC += constructor + '  }\n\n';
   TC += methods;
   TC += `}\n`;
