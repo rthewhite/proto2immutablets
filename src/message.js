@@ -92,11 +92,13 @@ module.exports = function handleMessage(message, messages, globalEnums, imports)
                 importedTypes[imported.import] = [];
               }
 
-              importedTypes[imported.import].push(field.type);
+              if (importedTypes[imported.import].indexOf(field.type) === -1) {
+                importedTypes[imported.import].push(field.type);
+              }
             }
           }
         }
-        
+
         // Makes sure the custom type get's constructed
         constructor += `    if (this._data.get('${fieldName}')) {\n`;
         constructor += `      this._data = this._data.set('${fieldName}', new ${field.type}(this._data.get('${fieldName}').toJS()));\n`
@@ -128,7 +130,7 @@ module.exports = function handleMessage(message, messages, globalEnums, imports)
         methods += `  set${utils.capitalize(fieldName)}(${fieldName}: ${enumType}): ${messageName} {\n`;
         methods += `    return new ${messageName}(this._data.set('${fieldName}', ${fieldName}).toJS());\n`;
         methods += `  }\n\n`;
-        break;      
+        break;
     }
   });
 
