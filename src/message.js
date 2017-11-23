@@ -36,7 +36,7 @@ module.exports = function handleMessage(message, messages, globalEnums, imports)
         methods += `  }\n\n`;
 
         methods += `  set${utils.capitalize(fieldName)}(${fieldName}: ${type}): ${messageName} {\n`;
-        methods += `    return new ${messageName}(this._data.set('${fieldName}', ${fieldName}).toJS());\n`;
+        methods += `    return new this.constructor(this._data.set('${fieldName}', ${fieldName}).toJS());\n`;
         methods += `  }\n\n`;
         break;
 
@@ -57,7 +57,7 @@ module.exports = function handleMessage(message, messages, globalEnums, imports)
         methods += `  }\n\n`;
 
         methods += `  set${utils.capitalize(fieldName)}(${fieldName}: ${type}<${field.type}>): ${messageName} {\n`;
-        methods += `    return new ${messageName}(this._data.set('${fieldName}', ${fieldName}).toJS());\n`;
+        methods += `    return new this.constructor(this._data.set('${fieldName}', ${fieldName}).toJS());\n`;
         methods += `  }\n\n`;
         break;
 
@@ -67,7 +67,7 @@ module.exports = function handleMessage(message, messages, globalEnums, imports)
         methods += `  }\n\n`;
 
         methods += `  set${utils.capitalize(fieldName)}(${fieldName}: ${type}<${field.keytype}, ${field.type}>): ${messageName} {\n`;
-        methods += `    return new ${messageName}(this._data.set('${fieldName}', ${fieldName}).toJS());\n`;
+        methods += `    return new this.constructor(this._data.set('${fieldName}', ${fieldName}).toJS());\n`;
         methods += `  }\n\n`;
         break;
 
@@ -109,7 +109,7 @@ module.exports = function handleMessage(message, messages, globalEnums, imports)
         methods += `  }\n\n`;
 
         methods += `  set${utils.capitalize(fieldName)}(${fieldName}: ${field.type}): ${messageName} {\n`;
-        methods += `    return new ${messageName}(this._data.set('${fieldName}', ${fieldName}).toJS());\n`;
+        methods += `    return new this.contructor(this._data.set('${fieldName}', ${fieldName}).toJS());\n`;
         methods += `  }\n\n`;
         break;
 
@@ -128,7 +128,7 @@ module.exports = function handleMessage(message, messages, globalEnums, imports)
         methods += `  }\n\n`;
 
         methods += `  set${utils.capitalize(fieldName)}(${fieldName}: ${enumType}): ${messageName} {\n`;
-        methods += `    return new ${messageName}(this._data.set('${fieldName}', ${fieldName}).toJS());\n`;
+        methods += `    return new this.constructor(this._data.set('${fieldName}', ${fieldName}).toJS());\n`;
         methods += `  }\n\n`;
         break;
     }
