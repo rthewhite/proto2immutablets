@@ -109,7 +109,7 @@ module.exports = function handleMessage(message, messages, globalEnums, imports)
         methods += `  }\n\n`;
 
         methods += `  set${utils.capitalize(fieldName)}(${fieldName}: ${field.type}): ${messageName} {\n`;
-        methods += `    return new this.contructor(this._data.set('${fieldName}', ${fieldName}).toJS());\n`;
+        methods += `    return this.contructor(this._data.set('${fieldName}', ${fieldName}).toJS());\n`;
         methods += `  }\n\n`;
         break;
 
