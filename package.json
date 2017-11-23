@@ -1,6 +1,6 @@
 {
   "name": "proto2immutablets",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "description": "",
   "main": "src/generator.js",
   "scripts": {
